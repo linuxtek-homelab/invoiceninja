@@ -16,6 +16,13 @@ IaC for building InvoiceNinja on Proxmox in a homelab setting.
 2. Automate installation of Ubuntu 22.04 with all of the basic dependencies.  This will require setting up Packer to build a custom image.
 3. Deploy the custom image to a customized VM in Proxmox 
 
+## Prerequisites
+Install the following packages locally:
+
+```
+whois, packer, ansible, 
+```
+
 ## Packer
 
 * Using Packer builder [proxmox-iso](https://developer.hashicorp.com/packer/integrations/hashicorp/proxmox/latest/components/builder/iso) to take the Ubuntu 22.04 ISO image, run provisioning, and create a virtual machine template.
@@ -31,4 +38,5 @@ export PROXMOX_USER=packer@pve
 export PROXMOX_PASSWORD="Enter Password"
 export PROXMOX_NODE_NAME="pve-node1"
 export LINUXADMIN_PASSWORD="Password"
+export AUTHORIZED_SSH_KEY=`cat ~/.ssh/id_rsa.pub`
 ```

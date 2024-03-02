@@ -1,3 +1,6 @@
+# Local environment variable values
+environment.vars
+
 # Local .terraform directories
 **/.terraform/*
 

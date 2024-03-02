@@ -1,0 +1,41 @@
+#cloud-config
+autoinstall:
+    version: 1
+    early-commands:
+        # workaround to stop ssh for packer as it thinks it timed out
+        - sudo systemctl stop ssh
+    locale: en_US
+    keyboard:
+        layout: en
+        variant: us
+    packages: [
+        open-vm-tools, openssh-server, net-tools, ntp, curl, vim, ifupdown, zip, unzip, gnupg2, software-properties-common, 
+        apt-transport-https, ca-certificates, lsb-release, python3-pip, jq, 
+        php8.1-bcmath, php8.1-gmp, php8.1-fileinfo, php8.1-gd, php8.1-mbstring, php8.1-pdo, php8.1-xml, php8.1-cli,
+        php8.1-curl, php8.1-zip, php8.1-gmp, php8.1-mysql, php8.1-fpm,
+        mariadb-server, mariadb-client, nginx 
+        ]
+    network:
+        network:
+            version: 2
+            ethernets:
+                ens192:
+                    dhcp4: true
+    identity:
+        hostname: ubuntu-server
+        username: ubuntu
+        password: "$6$rounds=4096$kyebkyvT2UdzwA59$QUh6SGkKfDnsKRIlRXC43O9.4MR0C/tTURA65mYWstEwDzljKRUILbYBh2YtEpRp8XUJ9NzvDwK1HiCo8rnHw."
+        # Password is generated via `mkpasswd -m sha-512 --rounds=4096` -> "password"
+    ssh:
+        install-server: yes
+        allow-pw: yes
+        authorized-keys:
+            - "{{env `AUTHORIZED_SSH_KEY`}}"
+    storage:
+        layout:
+            name: lvm
+    user-data:
+        disable_root: false
+    late-commands:
+        - echo 'ubuntu ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/ubuntu
+        - curtin in-target --target=/target -- chmod 440 /etc/sudoers.d/ubuntu
